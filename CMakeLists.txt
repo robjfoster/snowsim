@@ -41,18 +41,22 @@ target_link_libraries(snowsim PRIVATE ${Geant4_LIBRARIES} ${CRY_LIBRARY_PATH} ${
 # build SnowSim. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(SnowSim_SCRIPTS
-  init_vis.mac
-  vis.mac
-  cryvis.mac
-  crysetup.mac
-  cryverbose.mac
-  )
+# set(SnowSim_SCRIPTS
+#   init_vis.mac
+#   vis.mac
+#   cryvis.mac
+#   crysetup.mac
+#   cryverbose.mac
+#   )
+
+set(SCRIPT_DIR ${PROJECT_SOURCE_DIR}/mac)
+file(GLOB SnowSim_SCRIPTS "${SCRIPT_DIR}/*.mac")
 
 foreach(_script ${SnowSim_SCRIPTS})
+  get_filename_component(FILE_NAME ${_script} NAME)
   configure_file(
-    ${PROJECT_SOURCE_DIR}/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
+    ${_script}
+    ${PROJECT_BINARY_DIR}/${FILE_NAME}
     COPYONLY
     )
 endforeach()
