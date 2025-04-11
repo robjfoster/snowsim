@@ -37,15 +37,18 @@ if __name__ == "__main__":
     print("Rock material:", args.rockMaterials)
     
     generated_macros = []
+    generated_outputfiles = []
     for rock_material in args.rockMaterials:
         for snow_depth in args.snowDepths:
             # Create file and open it for writing
             filename = f"./run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.mac"
             generated_macros.append(filename)
+            outputfile = f"run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.csv"
+            generated_outputfiles.append(outputfile)
             with open(filename, 'w') as file:
                 # Write the macro commands to the file
                 file.write(f"/run/initialize\n")
-                file.write(f"/am/outputfile run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.csv\n")
+                file.write(f"/am/outputfile {outputfile}\n")
                 file.write(f"/snowsim/det/setRockMaterial {rock_material}\n")
                 file.write(f"/snowsim/det/setRockThickness 2 m\n")
                 file.write(f"/snowsim/det/setSnowDepth {snow_depth} m\n")
@@ -55,5 +58,6 @@ if __name__ == "__main__":
     # Generate task spooler script
     with open("../run_scripts/submit_runs.sh", "w") as script_file:
         script_file.write("#!/bin/bash\n")
-        for macro in generated_macros:
-            script_file.write(f"tsp bash -c \'source /opt/software/geant4/geant4-v11.3.0-install/bin/geant4.sh && cd ../build && ./snowsim ../tools/{macro} && cd ../tools\'\n") 
+        script_file.write(f"mkdir -p ../results/results_snowdepths")
+        for i,macro in enumerate(generated_macros):
+            script_file.write(f"tsp bash -c \'source /opt/software/geant4/geant4-v11.3.0-install/bin/geant4.sh && cd ../build && ./snowsim ../tools/{macro} && mv {generated_outputfiles[i]} ../results/results_snowdepths && cd ../tools\'\n") 
