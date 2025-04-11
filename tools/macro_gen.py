@@ -60,4 +60,5 @@ if __name__ == "__main__":
         script_file.write("#!/bin/bash\n")
         script_file.write(f"mkdir -p ../results/results_snowdepths\n")
         for i,macro in enumerate(generated_macros):
-            script_file.write(f"tsp bash -c \'source /opt/software/geant4/geant4-v11.3.0-install/bin/geant4.sh && cd ../build && ./snowsim ../tools/{macro} && mv {generated_outputfiles[i]} ../results/results_snowdepths && cd ../tools\'\n") 
+            wildcard_output = generated_outputfiles[i].replace(".csv", "*")
+            script_file.write(f"tsp bash -c \'source /opt/software/geant4/geant4-v11.3.0-install/bin/geant4.sh && cd ../build && ./snowsim ../tools/{macro} && mv {wildcard_output} ../results/results_snowdepths && cd ../tools\'\n") 
