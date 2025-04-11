@@ -5,7 +5,7 @@ def parse_arguments():
     
     # --snowdepths takes a space-separated list of floats
     parser.add_argument(
-        '--snowdepths', 
+        '--snowDepths', 
         type=float, 
         nargs='+',  # + means one or more arguments
         required=True,
@@ -33,12 +33,12 @@ def parse_arguments():
 
 if __name__ == "__main__":
     args = parse_arguments()
-    print("Snow depths:", args.snowdepths)
+    print("Snow depths:", args.snowDepths)
     print("Rock material:", args.rockMaterials)
     
     generated_macros = []
     for rock_material in args.rockMaterials:
-        for snow_depth in args.snowdepths:
+        for snow_depth in args.snowDepths:
             # Create file and open it for writing
             filename = f"./run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.mac"
             generated_macros.append(filename)
