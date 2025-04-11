@@ -48,6 +48,7 @@ private:
   G4int InputState;
   double fZOffset;
   CryGeneratorMessenger *gunMessenger;
+  G4bool willPrint;
 };
 
 #endif

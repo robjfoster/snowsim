@@ -60,9 +60,9 @@ CryGeneratorMessenger::CryGeneratorMessenger(
   UpdateCmd->SetGuidance("if you changed the CRY definition.");
   UpdateCmd->AvailableForStates(G4State_Idle);
 
-  PlaneCmd = new G4UIcmdWithADoubleAndUnit("/CRY/planeheight", this);
+  PlaneCmd = new G4UIcmdWithADoubleAndUnit("/CRY/planeHeight", this);
   PlaneCmd->SetGuidance("Set the CRY plane height in the Z dimension");
-  PlaneCmd->SetParameterName("planeheight", false);
+  PlaneCmd->SetParameterName("planeHeight", false);
   PlaneCmd->SetUnitCategory("Length");
   PlaneCmd->SetDefaultUnit("m");
   PlaneCmd->AvailableForStates(G4State_Idle);
