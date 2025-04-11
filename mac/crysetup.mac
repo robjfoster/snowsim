@@ -8,6 +8,6 @@
 /CRY/input date 4-1-2025
 /CRY/input latitude 51.450172
 /CRY/input altitude 0
-/CRY/input subboxLength 5
+/CRY/input subboxLength 100
 /CRY/update
-/CRY/planeHeight 2 m
+/CRY/planeHeight 10 m

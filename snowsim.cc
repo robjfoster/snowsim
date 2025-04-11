@@ -61,9 +61,9 @@ int main(int argc, char **argv)
     // Get the pointer to the User Interface manager
     auto UImanager = G4UImanager::GetUIpointer();
 
-    runManager->Initialize();
+    // runManager->Initialize();
 
-    UImanager->ApplyCommand("/control/execute crysetup.mac");
+    // UImanager->ApplyCommand("/control/execute crysetup.mac");
     // runManager->BeamOn(1);
 
     if (!ui)

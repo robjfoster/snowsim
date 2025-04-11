@@ -8,7 +8,7 @@ CryRunAction::CryRunAction()
 {
     fMessenger = new CryAnalysisMessenger(this);
     // set printing event number per each 100 events
-    G4RunManager::GetRunManager()->SetPrintProgress(100);
+    G4RunManager::GetRunManager()->SetPrintProgress(1000);
 
     auto am = G4CsvAnalysisManager::Instance();
     am->SetVerboseLevel(1);
