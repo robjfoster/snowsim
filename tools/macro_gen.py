@@ -28,6 +28,13 @@ def parse_arguments():
         help="The number of events to simulate (integer)."
     )
     
+    parser.add_argument(
+        '--projectName',
+        type=str,
+        required=True,
+        help="The name of the project (string)."
+    )
+    
     args = parser.parse_args()
     return args
 
@@ -41,7 +48,7 @@ if __name__ == "__main__":
     for rock_material in args.rockMaterials:
         for snow_depth in args.snowDepths:
             # Create file and open it for writing
-            filename = f"./run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.mac"
+            filename = f"./{args.projectName}/run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.mac"
             generated_macros.append(filename)
             outputfile = f"run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.csv"
             generated_outputfiles.append(outputfile)
@@ -56,9 +63,9 @@ if __name__ == "__main__":
                 file.write(f"/run/beamOn {args.nEvents}\n")
                 
     # Generate task spooler script
-    with open("../run_scripts/submit_runs.sh", "w") as script_file:
+    with open(f"../run_scripts/submit_runs_{args.projectName}.sh", "w") as script_file:
         script_file.write("#!/bin/bash\n")
-        script_file.write(f"mkdir -p ../results/results_snowdepths\n")
+        script_file.write(f"mkdir -p ../results/{args.projectName}\n")
         for i,macro in enumerate(generated_macros):
             wildcard_output = generated_outputfiles[i].replace(".csv", "*")
-            script_file.write(f"tsp bash -c \'source /opt/software/geant4/geant4-v11.3.0-install/bin/geant4.sh && cd ../build && ./snowsim ../tools/{macro} && mv {wildcard_output} ../results/results_snowdepths && cd ../tools\'\n") 
+            script_file.write(f"tsp bash -c \'source /opt/software/geant4/geant4-v11.3.0-install/bin/geant4.sh && cd ../build && ./snowsim ../tools/{macro} && mv {wildcard_output} ../results/{args.projectName} && cd ../tools\'\n") 
