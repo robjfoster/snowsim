@@ -34,3 +34,5 @@
 build
 data
 .vscode
+tools/*.mac
+run_scripts/*.sh
