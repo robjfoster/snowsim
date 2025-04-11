@@ -65,7 +65,7 @@ if __name__ == "__main__":
                 file.write(f"/run/beamOn {args.nEvents}\n")
                 
     # Generate task spooler script
-    Path("../results/{args.projectName}").mkdir(parents=True, exist_ok=True)
+    Path(f"../results/{args.projectName}").mkdir(parents=True, exist_ok=True)
     with open(f"../run_scripts/submit_runs_{args.projectName}.sh", "w") as script_file:
         script_file.write("#!/bin/bash\n")
         script_file.write(f"mkdir -p ../results/{args.projectName}\n")
