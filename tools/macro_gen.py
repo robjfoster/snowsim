@@ -58,6 +58,6 @@ if __name__ == "__main__":
     # Generate task spooler script
     with open("../run_scripts/submit_runs.sh", "w") as script_file:
         script_file.write("#!/bin/bash\n")
-        script_file.write(f"mkdir -p ../results/results_snowdepths")
+        script_file.write(f"mkdir -p ../results/results_snowdepths\n")
         for i,macro in enumerate(generated_macros):
             script_file.write(f"tsp bash -c \'source /opt/software/geant4/geant4-v11.3.0-install/bin/geant4.sh && cd ../build && ./snowsim ../tools/{macro} && mv {generated_outputfiles[i]} ../results/results_snowdepths && cd ../tools\'\n") 
