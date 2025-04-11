@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Process snow depth and rock material data.")
@@ -52,6 +53,7 @@ if __name__ == "__main__":
             generated_macros.append(filename)
             outputfile = f"run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.csv"
             generated_outputfiles.append(outputfile)
+            Path(f"./{args.projectName}").mkdir(parents=True, exist_ok=True)
             with open(filename, 'w') as file:
                 # Write the macro commands to the file
                 file.write(f"/run/initialize\n")
