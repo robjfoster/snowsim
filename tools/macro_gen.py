@@ -45,7 +45,7 @@ if __name__ == "__main__":
             with open(filename, 'w') as file:
                 # Write the macro commands to the file
                 file.write(f"/run/initialize\n")
-                file.write(f"/am/outputfile ./run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.csv\n")
+                file.write(f"/am/outputfile run_{rock_material}_rockmaterial_{snow_depth}m_snowdepth_{args.nEvents}evts.csv\n")
                 file.write(f"/snowsim/det/setRockMaterial {rock_material}\n")
                 file.write(f"/snowsim/det/setRockThickness 2 m\n")
                 file.write(f"/snowsim/det/setSnowDepth {snow_depth} m\n")
