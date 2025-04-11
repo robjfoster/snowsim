@@ -6,6 +6,7 @@
 CryRunAction::CryRunAction()
     : G4UserRunAction()
 {
+    fMessenger = new CryAnalysisMessenger(this);
     // set printing event number per each 100 events
     G4RunManager::GetRunManager()->SetPrintProgress(100);
 
@@ -31,7 +32,7 @@ CryRunAction::CryRunAction()
 void CryRunAction::BeginOfRunAction(const G4Run *run)
 {
     auto am = G4CsvAnalysisManager::Instance();
-    am->OpenFile("neutron_hits.csv");
+    am->OpenFile(fOutputFileName);
 }
 
 void CryRunAction::EndOfRunAction(const G4Run *run)
