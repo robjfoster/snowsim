@@ -36,6 +36,14 @@ def parse_arguments():
         help="The name of the project (string)."
     )
     
+    parser.add_argument(
+        '--embedTube',
+        type=bool,
+        required=False,
+        default=False,
+        help="Whether to embed the tube in the snow (boolean)."
+    )
+    
     args = parser.parse_args()
     return args
 
@@ -58,6 +66,8 @@ if __name__ == "__main__":
                 # Write the macro commands to the file
                 file.write(f"/run/initialize\n")
                 file.write(f"/am/outputfile {outputfile}\n")
+                if args.embedTube:
+                    file.write(f"/snowsim/det/embedTube true\n")
                 file.write(f"/snowsim/det/setRockMaterial {rock_material}\n")
                 file.write(f"/snowsim/det/setRockThickness 2 m\n")
                 file.write(f"/snowsim/det/setSnowDepth {snow_depth} m\n")

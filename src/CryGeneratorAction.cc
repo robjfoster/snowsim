@@ -170,13 +170,15 @@ void CryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
            << " " << "direction cosines "
            << G4ThreeVector((*vect)[j]->u(), (*vect)[j]->v(), (*vect)[j]->w())
            << " " << endl;
+
+      G4cout << "Time simulated: " << gen->timeSimulated() << G4endl;
     }
 
     particleGun->SetParticleDefinition(particleTable->FindParticle((*vect)[j]->PDGid()));
     particleGun->SetParticleEnergy((*vect)[j]->ke() * MeV);
     particleGun->SetParticlePosition(G4ThreeVector((*vect)[j]->x() * m, (*vect)[j]->y() * m, (*vect)[j]->z() * m + fZOffset));
     particleGun->SetParticleMomentumDirection(G4ThreeVector((*vect)[j]->u(), (*vect)[j]->v(), (*vect)[j]->w()));
-    particleGun->SetParticleTime((*vect)[j]->t());
+    particleGun->SetParticleTime((*vect)[j]->t() * s);
     particleGun->GeneratePrimaryVertex(anEvent);
     delete (*vect)[j];
   }

@@ -6,6 +6,7 @@
 class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithADoubleAndUnit;
+class G4UIcmdWithABool;
 class G4UIcommand;
 
 class CryDetectorConstruction;
@@ -28,6 +29,7 @@ private:
     G4UIcmdWithADoubleAndUnit *fRockThicknessCmd = nullptr;
     G4UIcmdWithADoubleAndUnit *fSnowDepthCmd = nullptr;
     G4UIcmdWithADoubleAndUnit *fAirHumidityCmd = nullptr;
+    G4UIcmdWithABool *fEmbedTubeCmd = nullptr;
 };
 
 #endif

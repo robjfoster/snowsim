@@ -5,6 +5,7 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithABool.hh"
 
 CryDetectorMessenger::CryDetectorMessenger(CryDetectorConstruction *det) : fDetectorConstruction(det)
 {
@@ -34,6 +35,11 @@ CryDetectorMessenger::CryDetectorMessenger(CryDetectorConstruction *det) : fDete
     fSnowDepthCmd->SetRange("depth>0.");
     fSnowDepthCmd->SetDefaultUnit("m");
     fSnowDepthCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    fEmbedTubeCmd = new G4UIcmdWithABool("/snowsim/det/embedTube", this);
+    fEmbedTubeCmd->SetGuidance("Embed tube in snow");
+    fEmbedTubeCmd->SetParameterName("embed", false);
+    fEmbedTubeCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 }
 
 CryDetectorMessenger::~CryDetectorMessenger()
@@ -59,5 +65,10 @@ void CryDetectorMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
     {
         G4cout << "Setting rock thickness to " << fRockThicknessCmd->GetNewDoubleValue(newValue) << " mm" << G4endl;
         fDetectorConstruction->SetRockThickness(fRockThicknessCmd->GetNewDoubleValue(newValue));
+    }
+    if (command == fEmbedTubeCmd)
+    {
+        G4cout << "Setting embed tube to " << fEmbedTubeCmd->GetNewBoolValue(newValue) << G4endl;
+        fDetectorConstruction->SetEmbedTube(fEmbedTubeCmd->GetNewBoolValue(newValue));
     }
 }
