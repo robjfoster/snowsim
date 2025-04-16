@@ -36,6 +36,7 @@ G4VPhysicalVolume *CryDetectorConstruction::Construct()
     fTubeZ = 1.5 * m;
     fTubeRadius = 15 * cm;
     fTubeGroundOffset = 2 * m;
+    fTubeOffsetHeight = 2 * m;
 
     auto worldMaterial = G4NistManager::Instance()->FindOrBuildMaterial("G4_Galactic");
     auto airMaterial = G4NistManager::Instance()->FindOrBuildMaterial("G4_AIR");
@@ -74,7 +75,7 @@ G4VPhysicalVolume *CryDetectorConstruction::Construct()
 
     auto tubeSolid = new G4Tubs("tube", 0, fTubeRadius, fTubeZ / 2, 0, 2 * M_PI);
     auto tubeLogical = new G4LogicalVolume(tubeSolid, airMaterial, "tube");
-    auto tubePhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, -fAirZ / 2 + fRockThickness + fTubeGroundOffset), tubeLogical, "tube", airLogical, false, true);
+    auto tubePhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, -fAirZ / 2 + fRockThickness + fTubeOffsetHeight), tubeLogical, "tube", airLogical, false, true);
     auto tubeVis = new G4VisAttributes(G4Color(0, 1, 0, 0.8));
     tubeVis->SetForceSolid(true);
     tubeLogical->SetVisAttributes(tubeVis);
@@ -149,6 +150,23 @@ void CryDetectorConstruction::SetRockThickness(G4double thickness)
     G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
     G4ThreeVector tubePosition = tubePhysical->GetTranslation();
     tubePosition.setZ(-fAirZ / 2 + fRockThickness + fTubeGroundOffset);
+    tubePhysical->SetTranslation(tubePosition);
+    G4RunManager::GetRunManager()->GeometryHasBeenModified();
+}
+
+void CryDetectorConstruction::SetTubeOffsetHeight(G4double offsetHeight)
+{
+    fTubeOffsetHeight = offsetHeight;
+    G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
+    G4ThreeVector tubePosition = tubePhysical->GetTranslation();
+    if (!fEmbedTube)
+    {
+        tubePosition.setZ(-fAirZ / 2 + fRockThickness + fTubeOffsetHeight);
+    }
+    else
+    {
+        tubePosition.setZ(-fSnowDepth / 2 + fTubeRadius + fTubeOffsetHeight);
+    }
     tubePhysical->SetTranslation(tubePosition);
     G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }

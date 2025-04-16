@@ -29,6 +29,7 @@ private:
     G4UIcmdWithADoubleAndUnit *fRockThicknessCmd = nullptr;
     G4UIcmdWithADoubleAndUnit *fSnowDepthCmd = nullptr;
     G4UIcmdWithADoubleAndUnit *fAirHumidityCmd = nullptr;
+    G4UIcmdWithADoubleAndUnit *fTubeOffsetHeightCmd = nullptr;
     G4UIcmdWithABool *fEmbedTubeCmd = nullptr;
 };
 

@@ -22,6 +22,7 @@ public:
     void SetSnowDepth(G4double snowDepth);
     void SetRockThickness(G4double rockThickness);
     void SetEmbedTube(G4bool embedTube);
+    void SetTubeOffsetHeight(G4double offsetHeight);
 
 private:
     G4double fWorldXY = 300 * m + 1 * cm;
@@ -36,6 +37,7 @@ private:
     G4double fAirHeight = 0.0;
     G4double fAirZ = 0.0;
     G4double fTubeGroundOffset = 0.0;
+    G4double fTubeOffsetHeight = 2.0 * m;
     G4bool fEmbedTube = false;
     CryDetectorMessenger *fMessenger = nullptr;
 };

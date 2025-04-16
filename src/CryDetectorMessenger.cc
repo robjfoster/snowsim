@@ -40,6 +40,14 @@ CryDetectorMessenger::CryDetectorMessenger(CryDetectorConstruction *det) : fDete
     fEmbedTubeCmd->SetGuidance("Embed tube in snow");
     fEmbedTubeCmd->SetParameterName("embed", false);
     fEmbedTubeCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+    fTubeOffsetHeightCmd = new G4UIcmdWithADoubleAndUnit("/snowsim/det/setTubeOffsetHeight", this);
+    fTubeOffsetHeightCmd->SetGuidance("Set tube offset height");
+    fTubeOffsetHeightCmd->SetUnitCategory("Length");
+    fTubeOffsetHeightCmd->SetParameterName("height", false);
+    fTubeOffsetHeightCmd->SetRange("height>0.");
+    fTubeOffsetHeightCmd->SetDefaultUnit("m");
+    fTubeOffsetHeightCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 }
 
 CryDetectorMessenger::~CryDetectorMessenger()
@@ -70,5 +78,10 @@ void CryDetectorMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
     {
         G4cout << "Setting embed tube to " << fEmbedTubeCmd->GetNewBoolValue(newValue) << G4endl;
         fDetectorConstruction->SetEmbedTube(fEmbedTubeCmd->GetNewBoolValue(newValue));
+    }
+    if (command == fTubeOffsetHeightCmd)
+    {
+        G4cout << "Setting tube offset height to " << fTubeOffsetHeightCmd->GetNewDoubleValue(newValue) << " mm" << G4endl;
+        fDetectorConstruction->SetTubeOffsetHeight(fTubeOffsetHeightCmd->GetNewDoubleValue(newValue));
     }
 }
