@@ -44,6 +44,14 @@ def parse_arguments():
         help="Whether to embed the tube in the snow (boolean)."
     )
     
+    parser.add_argument(
+        '--tubeHeight',
+        type=float,
+        required=False,
+        default=0.0,
+        help="The height of the tube (float)."
+    )
+    
     args = parser.parse_args()
     return args
 
@@ -71,6 +79,8 @@ if __name__ == "__main__":
                 file.write(f"/snowsim/det/setRockMaterial {rock_material}\n")
                 file.write(f"/snowsim/det/setRockThickness 2 m\n")
                 file.write(f"/snowsim/det/setSnowDepth {snow_depth} m\n")
+                if args.embedTube:
+                    file.write(f"/snowsim/det/setTubeOffsetHeight {args.tubeHeight} m\n")
                 file.write(f"/control/execute crysetup.mac\n")
                 file.write(f"/run/beamOn {args.nEvents}\n")
                 
