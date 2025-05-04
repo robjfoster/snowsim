@@ -100,16 +100,9 @@ if __name__ == "__main__":
                     file.write(f"/run/beamOn {args.nEvents}\n")
     
     
-    # Zip macro_files and other_list together
     paired = list(zip(generated_macros, generated_outputfiles))
-
-    # Sort the paired list using the macro file
     paired_sorted = sorted(paired, key=lambda x: sort_interleave_batches(x[0]))
-
-    # Unzip back
     generated_macros, generated_outputfiles = zip(*paired_sorted)
-
-    # Convert back to lists if needed
     generated_macros = list(generated_macros)
     generated_outputfiles = list(generated_outputfiles)
     
