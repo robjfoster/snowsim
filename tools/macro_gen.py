@@ -63,6 +63,12 @@ def parse_arguments():
     args = parser.parse_args()
     return args
 
+def sort_interleave_batches(filename):
+    base_part, batch_part = filename.split('_batch')
+    batch_num = int(batch_part.split('.')[0]) 
+    base_name = base_part 
+    return (batch_num, base_name)
+
 if __name__ == "__main__":
     args = parse_arguments()
     print("Snow depths:", args.snowDepths)
@@ -92,7 +98,10 @@ if __name__ == "__main__":
                         file.write(f"/snowsim/det/setTubeOffsetHeight {args.tubeHeight} m\n")
                     file.write(f"/control/execute crysetup.mac\n")
                     file.write(f"/run/beamOn {args.nEvents}\n")
-                
+    
+    generated_macros.sort(key=sort_interleave_batches)
+    breakpoint()
+    
     # Generate task spooler script
     Path(f"../results/{args.projectName}").mkdir(parents=True, exist_ok=True)
     with open(f"../run_scripts/submit_runs_{args.projectName}.sh", "w") as script_file:
