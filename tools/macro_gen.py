@@ -100,7 +100,6 @@ if __name__ == "__main__":
                     file.write(f"/run/beamOn {args.nEvents}\n")
     
     generated_macros.sort(key=sort_interleave_batches)
-    breakpoint()
     
     # Generate task spooler script
     Path(f"../results/{args.projectName}").mkdir(parents=True, exist_ok=True)
