@@ -6,8 +6,9 @@
 #include "G4RunManager.hh"
 #include "G4CsvAnalysisManager.hh"
 
-CryTubeSensitiveDetector::CryTubeSensitiveDetector(G4String name) : G4VSensitiveDetector(name)
+CryTubeSensitiveDetector::CryTubeSensitiveDetector(G4String name, CrySnowSensitiveDetector *snowSD) : G4VSensitiveDetector(name)
 {
+    fSnowSD = snowSD;
     collectionName.insert("CryTubeHitsCollection");
 }
 
@@ -56,10 +57,12 @@ G4bool CryTubeSensitiveDetector::ProcessHits(G4Step *step, G4TouchableHistory *h
 
 void CryTubeSensitiveDetector::EndOfEvent(G4HCofThisEvent *hce)
 {
+
     if (!fHit)
     {
         return;
     }
+
     auto am = G4CsvAnalysisManager::Instance();
     am->FillNtupleIColumn(0, 0, fEid);
     am->FillNtupleDColumn(0, 1, fEk);
@@ -72,5 +75,18 @@ void CryTubeSensitiveDetector::EndOfEvent(G4HCofThisEvent *hce)
     am->FillNtupleDColumn(0, 8, fTglobal);
     am->FillNtupleDColumn(0, 9, fTlocal);
     am->FillNtupleDColumn(0, 10, fTproper);
+
+    am->FillNtupleIColumn(0, 11, fSnowSD->fEid);
+    am->FillNtupleDColumn(0, 12, fSnowSD->fEk);
+    am->FillNtupleDColumn(0, 13, fSnowSD->fPosx);
+    am->FillNtupleDColumn(0, 14, fSnowSD->fPosy);
+    am->FillNtupleDColumn(0, 15, fSnowSD->fPosz);
+    am->FillNtupleDColumn(0, 16, fSnowSD->fDirx);
+    am->FillNtupleDColumn(0, 17, fSnowSD->fDiry);
+    am->FillNtupleDColumn(0, 18, fSnowSD->fDirz);
+    am->FillNtupleDColumn(0, 19, fSnowSD->fTglobal);
+    am->FillNtupleDColumn(0, 20, fSnowSD->fTlocal);
+    am->FillNtupleDColumn(0, 21, fSnowSD->fTproper);
+
     am->AddNtupleRow(0);
 }

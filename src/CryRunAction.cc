@@ -26,6 +26,19 @@ CryRunAction::CryRunAction()
     am->CreateNtupleDColumn("tglobal");
     am->CreateNtupleDColumn("tlocal");
     am->CreateNtupleDColumn("tproper");
+
+    am->CreateNtupleIColumn("init_n_eid");
+    am->CreateNtupleDColumn("init_n_Ek");
+    am->CreateNtupleDColumn("init_n_posx");
+    am->CreateNtupleDColumn("init_n_posy");
+    am->CreateNtupleDColumn("init_n_posz");
+    am->CreateNtupleDColumn("init_n_dirx");
+    am->CreateNtupleDColumn("init_n_diry");
+    am->CreateNtupleDColumn("init_n_dirz");
+    am->CreateNtupleDColumn("init_n_tglobal");
+    am->CreateNtupleDColumn("init_n_tlocal");
+    am->CreateNtupleDColumn("init_n_tproper");
+
     am->FinishNtuple();
 }
 

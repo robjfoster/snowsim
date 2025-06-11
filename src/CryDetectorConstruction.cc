@@ -1,6 +1,7 @@
 #include "CryDetectorConstruction.hh"
 #include "CryDetectorMessenger.hh"
 #include "CryTubeSensitiveDetector.hh"
+#include "CrySnowSensitiveDetector.hh"
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
@@ -80,8 +81,11 @@ G4VPhysicalVolume *CryDetectorConstruction::Construct()
     tubeVis->SetForceSolid(true);
     tubeLogical->SetVisAttributes(tubeVis);
 
-    auto tubeSD = new CryTubeSensitiveDetector("tubeSD");
+    auto snowSD = new CrySnowSensitiveDetector("snowSD");
+    G4SDManager::GetSDMpointer()->AddNewDetector(snowSD);
+    auto tubeSD = new CryTubeSensitiveDetector("tubeSD", snowSD);
     G4SDManager::GetSDMpointer()->AddNewDetector(tubeSD);
+    snowLogical->SetSensitiveDetector(snowSD);
     tubeLogical->SetSensitiveDetector(tubeSD);
 
     return worldPhysical;
