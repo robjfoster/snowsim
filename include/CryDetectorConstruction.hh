@@ -24,6 +24,7 @@ public:
     void SetEmbedTube(G4bool embedTube);
     void SetTubeOffsetHeight(G4double offsetHeight);
     void CheckGeometry();
+    void RebuildGeometry();
 
 private:
     G4double fWorldXY = 300 * m + 1 * cm;

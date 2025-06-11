@@ -100,100 +100,185 @@ void CryDetectorConstruction::SetRockMaterial(G4String materialName)
 
 void CryDetectorConstruction::SetSnowDepth(G4double depth)
 {
-    if (fEmbedTube && depth < fTubeRadius * 2)
-    {
-        G4Exception("CryDetectorConstruction::SetSnowDepth", "CryDetectorConstruction", FatalException, "Snow depth is too low for the tube.");
-    }
+    // if (fEmbedTube && depth < fTubeRadius * 2)
+    // {
+    //     G4Exception("CryDetectorConstruction::SetSnowDepth", "CryDetectorConstruction", FatalException, "Snow depth is too low for the tube.");
+    // }
+
     fSnowDepth = depth;
-    G4LogicalVolume *snowLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("snow");
-    G4Box *snowSolid = (G4Box *)snowLogical->GetSolid();
-    snowSolid->SetZHalfLength(fSnowDepth / 2);
-    snowLogical->SetSolid(snowSolid);
-    G4VPhysicalVolume *snowPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("snow");
-    G4ThreeVector snowPosition = snowPhysical->GetTranslation();
-    snowPosition.setZ(-fAirZ / 2 + fRockThickness + fSnowDepth / 2);
-    snowPhysical->SetTranslation(snowPosition);
-    if (fEmbedTube)
-    {
-        G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
-        if (tubePhysical == nullptr)
-        {
-            G4cout << "tubePhysical is nullptr" << G4endl;
-        }
-        G4ThreeVector tubePosition = tubePhysical->GetTranslation();
-        tubePosition.setZ(-fSnowDepth / 2 + fTubeRadius);
-        tubePhysical->SetTranslation(tubePosition);
-    }
+    RebuildGeometry();
+
+    // if (fEmbedTube)
+    // {
+    //     G4LogicalVolume *snowLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("snow");
+    //     G4Box *snowSolid = (G4Box *)snowLogical->GetSolid();
+    //     snowSolid->SetZHalfLength((fTubeOffsetHeight + fSnowDepth + fTubeRadius) / 2);
+    //     snowLogical->SetSolid(snowSolid);
+    //     G4VPhysicalVolume *snowPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("snow");
+    //     G4ThreeVector snowPosition = snowPhysical->GetTranslation();
+    //     snowPosition.setZ(-fAirZ / 2 + fRockThickness + depth / 2);
+    //     snowPhysical->SetTranslation(snowPosition);
+    //     G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
+    //     if (tubePhysical == nullptr)
+    //     {
+    //         G4cout << "tubePhysical is nullptr" << G4endl;
+    //     }
+    //     G4ThreeVector tubePosition = tubePhysical->GetTranslation();
+    //     tubePosition.setZ(snowPhysical->GetTranslation().z() + snowSolid->GetZHalfLength() - fTubeRadius - fSnowDepth);
+    //     tubePhysical->SetTranslation(tubePosition);
+    // }
+    // else
+    // {
+    //     G4LogicalVolume *snowLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("snow");
+    //     G4Box *snowSolid = (G4Box *)snowLogical->GetSolid();
+    //     snowSolid->SetZHalfLength(depth / 2);
+    //     snowLogical->SetSolid(snowSolid);
+    //     G4VPhysicalVolume *snowPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("snow");
+    //     G4ThreeVector snowPosition = snowPhysical->GetTranslation();
+    //     snowPosition.setZ(-fAirZ / 2 + fRockThickness + depth / 2);
+    //     snowPhysical->SetTranslation(snowPosition);
+    // }
+
+    // fSnowDepth = depth;
+    // G4LogicalVolume *snowLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("snow");
+    // G4Box *snowSolid = (G4Box *)snowLogical->GetSolid();
+    // snowSolid->SetZHalfLength(fSnowDepth / 2);
+    // snowLogical->SetSolid(snowSolid);
+    // G4VPhysicalVolume *snowPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("snow");
+    // G4ThreeVector snowPosition = snowPhysical->GetTranslation();
+    // snowPosition.setZ(-fAirZ / 2 + fRockThickness + fSnowDepth / 2);
+    // snowPhysical->SetTranslation(snowPosition);
+    // if (fEmbedTube)
+    // {
+    //     snowPosition.setZ(-fAirZ / 2 + fRockThickness + fSnowDepth / 2 + fTubeOffsetHeight / 2);
+    //     snowPhysical->SetTranslation(snowPosition);
+    //     G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
+    //     if (tubePhysical == nullptr)
+    //     {
+    //         G4cout << "tubePhysical is nullptr" << G4endl;
+    //     }
+    //     G4ThreeVector tubePosition = tubePhysical->GetTranslation();
+    //     tubePosition.setZ(-fSnowDepth / 2 + fTubeRadius);
+    //     tubePhysical->SetTranslation(tubePosition);
+    // }
     G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
 void CryDetectorConstruction::SetRockThickness(G4double thickness)
 {
     fRockThickness = thickness;
-    G4LogicalVolume *airLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("air");
-    G4LogicalVolume *rockLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("rock");
-    G4Box *airSolid = (G4Box *)airLogical->GetSolid();
-    fAirZ = fAirHeight + fRockThickness;
-    airSolid->SetZHalfLength(fAirZ / 2);
-    airLogical->SetSolid(airSolid);
-    G4Box *rockSolid = (G4Box *)rockLogical->GetSolid();
-    rockSolid->SetZHalfLength(fRockThickness / 2);
-    rockLogical->SetSolid(rockSolid);
-    G4VPhysicalVolume *airPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("air");
-    G4ThreeVector airPosition = airPhysical->GetTranslation();
-    airPosition.setZ(fAirZ / 2 - fRockThickness - 1 * cm);
-    airPhysical->SetTranslation(airPosition);
-    G4VPhysicalVolume *rockPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("rock");
-    G4ThreeVector rockPosition = rockPhysical->GetTranslation();
-    rockPosition.setZ(-fAirZ / 2 + fRockThickness / 2);
-    rockPhysical->SetTranslation(rockPosition);
-    G4VPhysicalVolume *snowPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("snow");
-    G4ThreeVector snowPosition = snowPhysical->GetTranslation();
-    snowPosition.setZ(-fAirZ / 2 + fRockThickness + fSnowDepth / 2);
-    snowPhysical->SetTranslation(snowPosition);
-    G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
-    G4ThreeVector tubePosition = tubePhysical->GetTranslation();
-    tubePosition.setZ(-fAirZ / 2 + fRockThickness + fTubeGroundOffset);
-    tubePhysical->SetTranslation(tubePosition);
-    G4RunManager::GetRunManager()->GeometryHasBeenModified();
+    RebuildGeometry();
+    // G4LogicalVolume *airLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("air");
+    // G4LogicalVolume *rockLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("rock");
+    // G4Box *airSolid = (G4Box *)airLogical->GetSolid();
+    // fAirZ = fAirHeight + fRockThickness;
+    // airSolid->SetZHalfLength(fAirZ / 2);
+    // airLogical->SetSolid(airSolid);
+    // G4Box *rockSolid = (G4Box *)rockLogical->GetSolid();
+    // rockSolid->SetZHalfLength(fRockThickness / 2);
+    // rockLogical->SetSolid(rockSolid);
+    // G4VPhysicalVolume *airPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("air");
+    // G4ThreeVector airPosition = airPhysical->GetTranslation();
+    // airPosition.setZ(fAirZ / 2 - fRockThickness - 1 * cm);
+    // airPhysical->SetTranslation(airPosition);
+    // G4VPhysicalVolume *rockPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("rock");
+    // G4ThreeVector rockPosition = rockPhysical->GetTranslation();
+    // rockPosition.setZ(-fAirZ / 2 + fRockThickness / 2);
+    // rockPhysical->SetTranslation(rockPosition);
+    // G4VPhysicalVolume *snowPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("snow");
+    // G4ThreeVector snowPosition = snowPhysical->GetTranslation();
+    // snowPosition.setZ(-fAirZ / 2 + fRockThickness + fSnowDepth / 2);
+    // snowPhysical->SetTranslation(snowPosition);
+    // G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
+    // G4ThreeVector tubePosition = tubePhysical->GetTranslation();
+    // tubePosition.setZ(-fAirZ / 2 + fRockThickness + fTubeGroundOffset);
+    // tubePhysical->SetTranslation(tubePosition);
+    // G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
 void CryDetectorConstruction::SetTubeOffsetHeight(G4double offsetHeight)
 {
     fTubeOffsetHeight = offsetHeight;
-    G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
-    G4ThreeVector tubePosition = tubePhysical->GetTranslation();
-    if (!fEmbedTube)
-    {
-        tubePosition.setZ(-fAirZ / 2 + fRockThickness + fTubeOffsetHeight);
-    }
-    else
-    {
-        tubePosition.setZ(-fSnowDepth / 2 + fTubeRadius + fTubeOffsetHeight);
-    }
-    tubePhysical->SetTranslation(tubePosition);
-    G4RunManager::GetRunManager()->GeometryHasBeenModified();
+    fTubeGroundOffset = offsetHeight;
+    RebuildGeometry();
+    // G4VPhysicalVolume *tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
+    // G4ThreeVector tubePosition = tubePhysical->GetTranslation();
+    // if (!fEmbedTube)
+    // {
+    //     tubePosition.setZ(-fAirZ / 2 + fRockThickness + fTubeOffsetHeight);
+    // }
+    // else
+    // {
+    //     tubePosition.setZ(-fSnowDepth / 2 + fTubeRadius + fTubeOffsetHeight);
+    // }
+    // tubePhysical->SetTranslation(tubePosition);
+    // G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
 void CryDetectorConstruction::SetEmbedTube(G4bool embedTube)
 {
     fEmbedTube = embedTube;
+    RebuildGeometry();
+    // if (fEmbedTube)
+    // {
+    //     // The tube is going to be a child of the snow so it must be contained entirely within it
+    //     if (fSnowDepth < (fTubeRadius * 2))
+    //     {
+    //         SetSnowDepth(fTubeRadius * 2 + 2 * nm);
+    //     }
+    //     auto tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
+    //     auto snowLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("snow");
+    //     auto airLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("air");
+    //     airLogical->RemoveDaughter(tubePhysical);
+    //     G4PhysicalVolumeStore::GetInstance()->DeRegister(tubePhysical);
+    //     delete tubePhysical;
+    //     auto newTubePhysical = new G4PVPlacement(new G4RotationMatrix(0, 90 * deg, 0), G4ThreeVector(0, 0, -fSnowDepth / 2 + fTubeRadius), (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("tube"), "tube", snowLogical, false, true);
+    //     G4RunManager::GetRunManager()->GeometryHasBeenModified();
+    // }
+}
+
+void CryDetectorConstruction::RebuildGeometry()
+{
+    auto worldLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("world");
+    auto airLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("air");
+    auto rockLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("rock");
+    auto rockSolid = (G4Box *)rockLogical->GetSolid();
+    auto rockPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("rock");
+    auto snowLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("snow");
+    auto snowSolid = (G4Box *)snowLogical->GetSolid();
+    auto snowPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("snow");
+    auto tubeLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("tube");
+    auto tubeSolid = (G4Tubs *)tubeLogical->GetSolid();
+    auto tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
+
+    rockSolid->SetZHalfLength(fRockThickness / 2);
+    rockLogical->SetSolid(rockSolid);
+    rockPhysical->SetTranslation(G4ThreeVector(0, 0, -fAirZ / 2 + fRockThickness / 2));
+
     if (fEmbedTube)
     {
-        // The tube is going to be a child of the snow so it must be contained entirely within it
-        if (fSnowDepth < (fTubeRadius * 2))
-        {
-            SetSnowDepth(fTubeRadius * 2 + 2 * nm);
-        }
-        auto tubePhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("tube");
-        auto snowLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("snow");
-        auto airLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("air");
-        airLogical->RemoveDaughter(tubePhysical);
+        snowSolid->SetZHalfLength(fTubeRadius + fSnowDepth / 2 + fTubeGroundOffset / 2);
+        snowLogical->SetSolid(snowSolid);
+        snowPhysical->SetTranslation(G4ThreeVector(0, 0, -fAirZ / 2 + fRockThickness + snowSolid->GetZHalfLength()));
+        // Remove the tube from its current parent and make the snow its parent
+        worldLogical->RemoveDaughter(tubePhysical);
         G4PhysicalVolumeStore::GetInstance()->DeRegister(tubePhysical);
         delete tubePhysical;
-        auto newTubePhysical = new G4PVPlacement(new G4RotationMatrix(0, 90 * deg, 0), G4ThreeVector(0, 0, -fSnowDepth / 2 + fTubeRadius), (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("tube"), "tube", snowLogical, false, true);
-        G4RunManager::GetRunManager()->GeometryHasBeenModified();
+        tubePhysical = new G4PVPlacement(new G4RotationMatrix(0, 90 * deg, 0), G4ThreeVector(0, 0, -snowSolid->GetZHalfLength() + fTubeRadius + fTubeGroundOffset), tubeLogical, "tube", snowLogical, false, true);
     }
+    else
+    {
+        snowSolid->SetZHalfLength(fSnowDepth / 2);
+        snowLogical->SetSolid(snowSolid);
+        snowPhysical->SetTranslation(G4ThreeVector(0, 0, -fAirZ / 2 + fRockThickness + fSnowDepth / 2));
+
+        // Remove the tube from its current parent and make the air its parent
+        worldLogical->RemoveDaughter(tubePhysical);
+        G4PhysicalVolumeStore::GetInstance()->DeRegister(tubePhysical);
+        delete tubePhysical;
+        tubePhysical = new G4PVPlacement(0, G4ThreeVector(0, 0, -fAirZ / 2 + fRockThickness + fTubeGroundOffset + tubeSolid->GetZHalfLength()), tubeLogical, "tube", airLogical, false, true);
+    }
+    G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
 void CryDetectorConstruction::CheckGeometry()
