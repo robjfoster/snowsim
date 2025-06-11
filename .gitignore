@@ -36,3 +36,5 @@ data
 .vscode
 tools/**/*.mac
 run_scripts/*.sh
+results
+run_scripts/*.sh
