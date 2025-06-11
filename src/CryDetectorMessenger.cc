@@ -6,6 +6,7 @@
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithoutParameter.hh"
 
 CryDetectorMessenger::CryDetectorMessenger(CryDetectorConstruction *det) : fDetectorConstruction(det)
 {
@@ -14,6 +15,9 @@ CryDetectorMessenger::CryDetectorMessenger(CryDetectorConstruction *det) : fDete
 
     fDetDirectory = new G4UIdirectory("/snowsim/det/");
     fDetDirectory->SetGuidance("Detector construction commands");
+
+    fCheckGeometryCmd = new G4UIcmdWithoutParameter("/snowsim/det/checkGeometry", this);
+    fCheckGeometryCmd->SetGuidance("Check geometry of the detector");
 
     fRockMaterialCmd = new G4UIcmdWithAString("/snowsim/det/setRockMaterial", this);
     fRockMaterialCmd->SetGuidance("Select material of the rock");
@@ -60,6 +64,11 @@ CryDetectorMessenger::~CryDetectorMessenger()
 
 void CryDetectorMessenger::SetNewValue(G4UIcommand *command, G4String newValue)
 {
+    if (command == fCheckGeometryCmd)
+    {
+        G4cout << "Checking geometry..." << G4endl;
+        fDetectorConstruction->CheckGeometry();
+    }
     if (command == fRockMaterialCmd)
     {
         fDetectorConstruction->SetRockMaterial(newValue);

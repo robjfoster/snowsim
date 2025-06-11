@@ -192,6 +192,38 @@ void CryDetectorConstruction::SetEmbedTube(G4bool embedTube)
     }
 }
 
+void CryDetectorConstruction::CheckGeometry()
+{
+    G4LogicalVolume *worldLogical = (G4LogicalVolume *)G4LogicalVolumeStore::GetInstance()->GetVolume("world");
+    if (!worldLogical)
+    {
+        G4Exception("CryDetectorConstruction::CheckGeometry", "CryDetectorConstruction", FatalException, "World logical volume not found.");
+    }
+
+    G4VPhysicalVolume *worldPhysical = (G4VPhysicalVolume *)G4PhysicalVolumeStore::GetInstance()->GetVolume("world");
+    if (!worldPhysical)
+    {
+        G4Exception("CryDetectorConstruction::CheckGeometry", "CryDetectorConstruction", FatalException, "World physical volume not found.");
+    }
+    // Check for overlaps in world volume and all children - CHECK THE PHYSICAL VOLUME NOT THE LOGICAL VOLUME COPILOT
+    G4bool overlaps = false;
+
+    for (auto pv : *G4PhysicalVolumeStore::GetInstance())
+    {
+        G4String name = pv->GetName();
+        G4String motherName = pv->GetMotherLogical() ? pv->GetMotherLogical()->GetName() : "World";
+        G4cout << "Volume: " << name
+               << ", Mother: " << motherName
+               << ", CopyNo: " << pv->GetCopyNo()
+               << G4endl;
+        G4bool overlap = pv->CheckOverlaps();
+        if (overlap)
+        {
+            G4Exception("CryDetectorConstruction", "CheckGeometry", FatalException, "There are overlaps in the geometry.");
+        }
+    }
+}
+
 // In the future we need to consider the air humidity, here's an example of how
 // that could be handled.
 

@@ -7,6 +7,7 @@ class G4UIdirectory;
 class G4UIcmdWithAString;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithABool;
+class G4UIcmdWithoutParameter;
 class G4UIcommand;
 
 class CryDetectorConstruction;
@@ -24,6 +25,8 @@ private:
 
     G4UIdirectory *fDirectory = nullptr;
     G4UIdirectory *fDetDirectory = nullptr;
+
+    G4UIcmdWithoutParameter *fCheckGeometryCmd = nullptr;
 
     G4UIcmdWithAString *fRockMaterialCmd = nullptr;
     G4UIcmdWithADoubleAndUnit *fRockThicknessCmd = nullptr;
